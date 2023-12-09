@@ -1,4 +1,4 @@
-<h1 align="center">Discord Bot Template</h4>
+<h1 align="center">Discord Bot</h4>
 <p align="center">
   <img
     alt="Repository size"
@@ -10,20 +10,20 @@
       src="https://img.shields.io/badge/made%20by-Fellipe%20Utaka-%2304D361"
     />
   </a>
-  <a href="https://github.com/fellipeutaka/discord-bot-template/commits/main">
+  <a href="https://github.com/braddevans/TS-DiscordBot-breb/tree/main">
     <img
       alt="GitHub last commit"
-      src="https://img.shields.io/github/last-commit/fellipeutaka/discord-bot-template"
+      src="https://img.shields.io/github/last-commit/braddevans/TS-DiscordBot-breb"
     />
   </a>
   <img
     alt="License"
     src="https://img.shields.io/badge/license-MIT-brightgreen"
   />
-  <a href="https://github.com/fellipeutaka/discord-bot-template/stargazers">
+  <a href="https://github.com/braddevans/TS-DiscordBot-breb/stargazers">
     <img
       alt="Stargazers"
-      src="https://img.shields.io/github/stars/fellipeutaka/discord-bot-template?style=social"
+      src="https://img.shields.io/github/stars/braddevans/TS-DiscordBot-breb?style=social"
     />
   </a>
 </p>
