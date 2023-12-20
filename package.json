@@ -16,12 +16,13 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "start": "node .",
+    "start": "node dist/.",
     "build": "tsup src/index.ts --minify",
     "format": "prettier --write \"**/*.{json,ts}\"",
     "lint": "eslint . --ext ts --fix"
   },
   "dependencies": {
+    "console-log-colors": "^0.4.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "glob": "^10.3.10",

@@ -1,7 +1,7 @@
-import { REST, Routes } from "discord.js";
+import { ApplicationCommand, RequestData, REST, Routes } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
-import { log, error as log_error, delay } from "./util";
+import { log_log, log_error as log_error, delay } from "./util";
 
 const commandsData = Object.values(commands).map((command) => command);
 
@@ -14,9 +14,9 @@ type DeployCommandsProps = {
 
 export async function deployCommandsGuild({ guildId }: DeployCommandsProps) {
     try {
-        log("Started refreshing application (/) commands.");
+        log_log("Started refreshing application (/) commands.");
 
-        log(`put: ${commands}`);
+        log_log(`put: ${commands}`);
         await rest.put(
             Routes.applicationGuildCommands(clientId, guildId),
             {
@@ -24,7 +24,7 @@ export async function deployCommandsGuild({ guildId }: DeployCommandsProps) {
             }
         );
 
-        log("Successfully reloaded application (/) commands.");
+        log_log("Successfully reloaded application (/) commands.");
     } catch (error) {
         log_error(String(error));
     }
@@ -49,12 +49,12 @@ export async function deployCommands() {
 
 export async function get_REST_global_Commands() {
     // eslint-disable-next-line
-    let json = [];
+    let json : [] = [];
     try {
         console.log("application (/) commands [rest].");
-
+        
         const res = await rest.get(Routes.applicationCommands(clientId));
-        log(JSON.stringify(res));
+        //log(JSON.stringify(res));
 
         //   {
         //    id: '1105859971989647409',
@@ -70,11 +70,11 @@ export async function get_REST_global_Commands() {
         //    nsfw: false
         //  },
         for (let i = 0; i <= res.length; i++) {
-            log(`appending: ${JSON.stringify({"id":res[i].id, "name":res[i].name})}`);
+            log_log(`appending: ${JSON.stringify({"id":res[i].id, "name":res[i].name})}`);
             json.push({"id":res[i].id, "name":res[i].name});
         }
 
-        log("Successfully got application (/) commands.");
+        log_log("Successfully got application (/) commands.");
     } catch (error) {
         log_error(String(error));
     }
@@ -83,12 +83,12 @@ export async function get_REST_global_Commands() {
 
 export async function get_REST_guild_Commands(guildId: string) {
     try {
-        log("application (/) commands [rest].");
+        log_log("application (/) commands [rest].");
 
         const res = await rest.get(Routes.applicationGuildCommands(clientId, guildId));
-        log(res);
+        log_log(res);
 
-        log("Successfully got application (/) commands.");
+        log_log("Successfully got application (/) commands.");
     } catch (error) {
         log_error(String(error));
     }
@@ -98,7 +98,7 @@ export async function clear_global_commands(){
     const global_commands = await get_REST_global_Commands();
     for(let i = 0; i < global_commands.length; i++) {
         rest.put(Routes.applicationCommands(clientId), { body: [] })
-      	.then(() => log("Successfully deleted all application commands."))
+      	.then(() => log_log("Successfully deleted all application commands."))
       	.catch((e) => log_error(String(e)));
         await delay(1000);
     }
