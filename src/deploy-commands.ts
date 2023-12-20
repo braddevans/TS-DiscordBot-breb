@@ -1,8 +1,9 @@
-import {ApplicationCommand, REST, Routes} from "discord.js";
+import { REST, Routes } from "discord.js";
 import { config } from "./config";
 import { commands } from "./commands";
+import { log, error as log_error, delay } from "./util";
 
-const commandsData = Object.values(commands).map((command) => command.data);
+const commandsData = Object.values(commands).map((command) => command);
 
 const rest = new REST({ version: "10" }).setToken(config.DISCORD_TOKEN);
 const clientId = config.DISCORD_CLIENT_ID;
@@ -13,18 +14,19 @@ type DeployCommandsProps = {
 
 export async function deployCommandsGuild({ guildId }: DeployCommandsProps) {
     try {
-        console.log("Started refreshing application (/) commands.");
+        log("Started refreshing application (/) commands.");
 
+        log(`put: ${commands}`);
         await rest.put(
-          Routes.applicationGuildCommands(clientId, guildId),
+            Routes.applicationGuildCommands(clientId, guildId),
             {
                 body: commandsData,
             }
         );
 
-        console.log("Successfully reloaded application (/) commands.");
+        log("Successfully reloaded application (/) commands.");
     } catch (error) {
-        console.error(error);
+        log_error(String(error));
     }
 }
 
@@ -33,7 +35,7 @@ export async function deployCommands() {
         console.log("Started refreshing application (/) commands.");
 
         await rest.put(
-          Routes.applicationCommands(clientId),
+            Routes.applicationCommands(clientId),
             {
                 body: commandsData,
             }
@@ -41,7 +43,7 @@ export async function deployCommands() {
 
         console.log("Successfully reloaded application (/) commands.");
     } catch (error) {
-        console.error(error);
+        log_error(String(error));
     }
 }
 
@@ -52,6 +54,7 @@ export async function get_REST_global_Commands() {
         console.log("application (/) commands [rest].");
 
         const res = await rest.get(Routes.applicationCommands(clientId));
+        log(JSON.stringify(res));
 
         //   {
         //    id: '1105859971989647409',
@@ -67,27 +70,27 @@ export async function get_REST_global_Commands() {
         //    nsfw: false
         //  },
         for (let i = 0; i <= res.length; i++) {
-            console.log(`appending: ${JSON.stringify({"id":res[i].id, "name":res[i].name})}`);
+            log(`appending: ${JSON.stringify({"id":res[i].id, "name":res[i].name})}`);
             json.push({"id":res[i].id, "name":res[i].name});
         }
 
-        console.log("Successfully got application (/) commands.");
+        log("Successfully got application (/) commands.");
     } catch (error) {
-        console.error(error);
+        log_error(String(error));
     }
     return json;
 }
 
-export async function get_REST_guild_Commands({ guildId }: DeployCommandsProps) {
+export async function get_REST_guild_Commands(guildId: string) {
     try {
-        console.log("application (/) commands [rest].");
+        log("application (/) commands [rest].");
 
         const res = await rest.get(Routes.applicationGuildCommands(clientId, guildId));
-        console.log(res);
+        log(res);
 
-        console.log("Successfully got application (/) commands.");
+        log("Successfully got application (/) commands.");
     } catch (error) {
-        console.error(error);
+        log_error(String(error));
     }
 }
 
@@ -95,12 +98,9 @@ export async function clear_global_commands(){
     const global_commands = await get_REST_global_Commands();
     for(let i = 0; i < global_commands.length; i++) {
         rest.put(Routes.applicationCommands(clientId), { body: [] })
-      	.then(() => console.log("Successfully deleted all application commands."))
-      	.catch(console.error);
+      	.then(() => log("Successfully deleted all application commands."))
+      	.catch((e) => log_error(String(e)));
         await delay(1000);
     }
 }
 
-export function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-}
